@@ -1,27 +1,28 @@
+""" Use AF_UNIX and socket file (client)"""
 import os
 import socket
 
-S_FILE = 'test.socket'
+from settings import SOCKET_FILE
 
-print("Подключение")
-if os.path.exists(S_FILE):
-    client = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
-    client.connect(S_FILE)
-    print("Подключено")
-    print("Отправьте 'STOP' для завершения")
+print("::: Connecting...")
+if os.path.exists(SOCKET_FILE):
+    client = socket.socket(family=socket.AF_UNIX, type=socket.SOCK_DGRAM)
+    client.connect(SOCKET_FILE)
+    print("::: Connected")
+    print("::: Send 'stop' for closing connection")
     while True:
         try:
             data = input("> ")
             if data != "":
-                print(f"ОТПРАВЛЕНО: {data}")
-                client.send(data.encode('utf-8'))
-                if data == "STOP":
-                    print("Отключение")
+                print(f"::: Sent: {data}")
+                client.send(data.encode("utf-8"))
+                if data.lower() == "stop":
+                    print("::: Disconnecting...")
                     break
         except KeyboardInterrupt:
-            print("Отключение")
+            print("::: Disconnecting...")
             break
     client.close()
 else:
-    print("Ошибка подключения")
-print("Отключено")
+    print("::: Connection error")
+print("::: Diconnected")

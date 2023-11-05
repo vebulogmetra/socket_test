@@ -1,25 +1,25 @@
+""" Use AF_UNIX and socket file (server)"""
 import os
 import socket
 
-S_FILE = 'test.socket'
+from settings import SOCKET_FILE
 
-if os.path.exists(S_FILE):
-    os.remove(S_FILE)
+if os.path.exists(SOCKET_FILE):
+    os.remove(SOCKET_FILE)
 
-print("Открываем сокет")
+print("::: Open socket")
 server = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
-server.bind(S_FILE)
+server.bind(SOCKET_FILE)
 
 while True:
     data = server.recv(2048)
     if not data:
         break
     else:
-        print('='*25)
+        print("<" * 25)
     print(data)
-    if data == b'STOP':
+    if str(data).lower() == "stop":
         break
-print('='*25)
-print("Закрываем сокет")
+print("::: Close socket")
 server.close()
-os.remove(S_FILE)
+os.remove(SOCKET_FILE)

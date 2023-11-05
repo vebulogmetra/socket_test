@@ -1,19 +1,17 @@
+""" Use AF_INET (server)"""
 import socket
 
-TCP_IP = '127.0.0.1'
-TCP_PORT = 8001
-BUFFER_SIZE = 1024
+from settings import BUFFER_SIZE, TCP_IP, TCP_PORT
 
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.bind((TCP_IP, TCP_PORT))
-s.listen(1)
+socket_ = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+socket_.bind((TCP_IP, TCP_PORT))
+socket_.listen(1)
 
-conn, addr = s.accept()
-print("Connection address: {}".format(addr))
+conn, addr = socket_.accept()
+print(f"::: Connection address: {addr}")
 while True:
-    data = conn.recv(BUFFER_SIZE)
+    data: bytes = conn.recv(BUFFER_SIZE)
     if not data:
         break
-    print("received data: {}".format(data))
-    conn.send(data)
+    print(f"received data: {data}")
 conn.close()
